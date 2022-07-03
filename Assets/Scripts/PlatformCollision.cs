@@ -4,30 +4,33 @@ using UnityEngine;
 
 public class PlatformCollision : MonoBehaviour
 {
-    [SerializeField] float jumpSpeed = 5;
-    [SerializeField] GameObject doodle;
-    private Rigidbody2D rb;
-    private BoxCollider2D bc2d;
-
+    private float jumpSpeed = 350;
+    private GameObject doodle;
+    private Rigidbody2D rb;       
+    
     private void Start()
     {
-        rb = doodle.GetComponent<Rigidbody2D>();
-        bc2d = GetComponent<BoxCollider2D>();
+        doodle = GameObject.FindGameObjectWithTag("Doodle");
+        rb = doodle.GetComponent<Rigidbody2D>();    
     }
 
+    
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.name == "Doodle")
+        if (other.gameObject.CompareTag("Doodle"))
         {
-            rb.velocity = Vector2.up * jumpSpeed * Time.deltaTime;
-            bc2d.isTrigger = true;
+            
+            if (other.relativeVelocity.y<=0)
+            {               
+                rb.velocity = Vector2.up * jumpSpeed * Time.deltaTime;                
+            }                                  
+
         }
+
+        if (other.gameObject.tag == "Platform")
+        {           
+            Destroy(gameObject);
+        }
+
     }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        bc2d.isTrigger = false;
-    }
-
-
 }
